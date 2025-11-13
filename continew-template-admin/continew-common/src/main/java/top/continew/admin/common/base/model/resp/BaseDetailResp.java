@@ -1,0 +1,49 @@
+
+package top.continew.admin.common.base.model.resp;
+
+import cn.crane4j.annotation.Assemble;
+import cn.crane4j.annotation.Mapping;
+import cn.crane4j.annotation.condition.ConditionOnPropertyNotNull;
+import cn.idev.excel.annotation.ExcelProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import top.continew.admin.common.constant.ContainerConstants;
+
+import java.io.Serial;
+import java.time.LocalDateTime;
+
+/**
+ * 详情响应参数基类
+ *
+ * @author Charles7c
+ * @since 2024/12/27 20:32
+ */
+@Data
+public class BaseDetailResp extends BaseResp {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 修改人
+     */
+    @JsonIgnore
+    @ConditionOnPropertyNotNull
+    @Assemble(container = ContainerConstants.USER_NICKNAME, props = @Mapping(ref = "updateUserString"))
+    private Long updateUser;
+
+    /**
+     * 修改人
+     */
+    @Schema(description = "修改人", example = "李四")
+    @ExcelProperty(value = "修改人", order = Integer.MAX_VALUE - 2)
+    private String updateUserString;
+
+    /**
+     * 修改时间
+     */
+    @Schema(description = "修改时间", example = "2023-08-08 08:08:08", type = "string")
+    @ExcelProperty(value = "修改时间", order = Integer.MAX_VALUE - 1)
+    private LocalDateTime updateTime;
+}

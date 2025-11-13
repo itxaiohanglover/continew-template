@@ -1,0 +1,95 @@
+
+package top.continew.admin.system.service;
+
+import top.continew.admin.common.base.service.BaseService;
+import top.continew.admin.common.context.RoleContext;
+import top.continew.admin.system.model.entity.RoleDO;
+import top.continew.admin.system.model.query.RoleQuery;
+import top.continew.admin.system.model.req.RoleReq;
+import top.continew.admin.system.model.req.RoleUpdatePermissionReq;
+import top.continew.admin.system.model.resp.role.RoleDetailResp;
+import top.continew.admin.system.model.resp.role.RoleResp;
+import top.continew.starter.data.service.IService;
+
+import java.util.List;
+import java.util.Set;
+
+/**
+ * 角色业务接口
+ *
+ * @author Charles7c
+ * @since 2023/2/8 23:15
+ */
+public interface RoleService extends BaseService<RoleResp, RoleDetailResp, RoleQuery, RoleReq>, IService<RoleDO> {
+
+    /**
+     * 修改角色权限
+     *
+     * @param id  角色 ID
+     * @param req 请求参数
+     */
+    void updatePermission(Long id, RoleUpdatePermissionReq req);
+
+    /**
+     * 分配角色给用户
+     *
+     * @param id      角色 ID
+     * @param userIds 用户 ID 列表
+     */
+    void assignToUsers(Long id, List<Long> userIds);
+
+    /**
+     * 更新用户上下文
+     *
+     * @param roleId 角色 ID
+     */
+    void updateUserContext(Long roleId);
+
+    /**
+     * 根据用户 ID 查询权限码
+     *
+     * @param userId 用户 ID
+     * @return 权限码集合
+     */
+    Set<String> listPermissionByUserId(Long userId);
+
+    /**
+     * 根据用户 ID 查询角色编码
+     *
+     * @param userId 用户 ID
+     * @return 角色编码集合
+     */
+    Set<String> listCodeByUserId(Long userId);
+
+    /**
+     * 根据用户 ID 查询角色
+     *
+     * @param userId 用户 ID
+     * @return 角色集合
+     */
+    Set<RoleContext> listByUserId(Long userId);
+
+    /**
+     * 根据编码查询 ID
+     *
+     * @param code 编码
+     * @return ID
+     */
+    Long getIdByCode(String code);
+
+    /**
+     * 根据角色名称查询
+     *
+     * @param list 名称列表
+     * @return 角色列表
+     */
+    List<RoleDO> listByNames(List<String> list);
+
+    /**
+     * 根据角色名称查询数量
+     *
+     * @param roleNames 名称列表
+     * @return 角色数量
+     */
+    int countByNames(List<String> roleNames);
+}

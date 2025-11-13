@@ -1,0 +1,27 @@
+body {
+  overflow: hidden;
+}
+.init-box {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.init-loading {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+}
+@keyframes arco-loading-circle {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.init-loading-icon {
+  animation: arco-loading-circle 1s infinite cubic-bezier(0,0,1,1);
+}

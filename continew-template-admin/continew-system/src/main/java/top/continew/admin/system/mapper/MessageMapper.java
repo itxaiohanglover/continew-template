@@ -1,0 +1,58 @@
+
+package top.continew.admin.system.mapper;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import top.continew.admin.system.model.entity.MessageDO;
+import top.continew.admin.system.model.query.MessageQuery;
+import top.continew.admin.system.model.resp.message.MessageDetailResp;
+import top.continew.admin.system.model.resp.message.MessageResp;
+import top.continew.starter.data.mapper.BaseMapper;
+
+import java.util.List;
+
+/**
+ * 消息 Mapper
+ *
+ * @author Bull-BCLS
+ * @since 2023/10/15 19:05
+ */
+@Mapper
+public interface MessageMapper extends BaseMapper<MessageDO> {
+
+    /**
+     * 分页查询消息列表
+     *
+     * @param page  分页参数
+     * @param query 查询条件
+     * @return 消息列表
+     */
+    IPage<MessageResp> selectMessagePage(@Param("page") Page<MessageDO> page, @Param("query") MessageQuery query);
+
+    /**
+     * 查询消息详情
+     *
+     * @param id ID
+     * @return 消息详情
+     */
+    MessageDetailResp selectMessageById(@Param("id") Long id);
+
+    /**
+     * 查询未读消息列表
+     *
+     * @param userId 用户 ID
+     * @return 消息列表
+     */
+    List<MessageDO> selectUnreadListByUserId(@Param("userId") Long userId);
+
+    /**
+     * 查询未读消息数量
+     *
+     * @param userId 用户 ID
+     * @param type   消息类型
+     * @return 未读消息数量
+     */
+    Long selectUnreadCountByUserIdAndType(@Param("userId") Long userId, @Param("type") Integer type);
+}

@@ -1,0 +1,30 @@
+替换为具体项目的项目名和配置
+
+//打包
+docker build -t continew-admin .
+
+//docker运行后端容器
+docker run -d --name continew-admin \
+  -p 8000:8000 \
+  -e TZ=Asia/Shanghai \
+  -e DB_HOST=****** \
+  -e DB_PORT=**** \
+  -e DB_USER=root \
+  -e DB_PWD=******* \
+  -e DB_NAME=continew-admin \
+  -e REDIS_HOST=******* \
+  -e REDIS_PORT=*******\
+  -e REDIS_DB=******* \
+  continew-admin
+
+//docker运行前端（挂载卷地址改为项目具体地址）
+docker
+   docker run \
+   --name continew-admin \
+   -d \
+   -v /data/continew/front_end/nginx/html:/usr/share/nginx/html \
+   -v /data/continew/front_end/nginx/conf/nginx.conf:/etc/nginx/nginx.conf \
+   -v /data/continew/front_end/nginx/conf.d:/etc/nginx/conf.d \
+   -p 6379:6379 \
+   --restart always \
+   nginx

@@ -1,0 +1,91 @@
+
+package top.continew.admin.system.service;
+
+import top.continew.admin.system.model.entity.UserRoleDO;
+import top.continew.admin.system.model.query.RoleUserQuery;
+import top.continew.admin.system.model.resp.role.RoleUserResp;
+import top.continew.starter.extension.crud.model.query.PageQuery;
+import top.continew.starter.extension.crud.model.resp.PageResp;
+
+import java.util.List;
+
+/**
+ * 用户和角色业务接口
+ *
+ * @author Charles7c
+ * @since 2023/2/20 21:30
+ */
+public interface UserRoleService {
+
+    /**
+     * 分页查询角色关联用户列表
+     *
+     * @param query     查询条件
+     * @param pageQuery 分页查询条件
+     * @return 分页信息
+     */
+    PageResp<RoleUserResp> pageUser(RoleUserQuery query, PageQuery pageQuery);
+
+    /**
+     * 批量分配角色给指定用户
+     *
+     * @param roleIds 角色 ID 列表
+     * @param userId  用户 ID
+     * @return 是否成功（true：成功；false：无变更/失败）
+     */
+    boolean assignRolesToUser(List<Long> roleIds, Long userId);
+
+    /**
+     * 批量分配角色给用户
+     *
+     * @param roleId  角色 ID
+     * @param userIds 用户 ID 列表
+     * @return 是否成功（true：成功；false：无变更/失败）
+     */
+    boolean assignRoleToUsers(Long roleId, List<Long> userIds);
+
+    /**
+     * 根据 ID 删除
+     *
+     * @param ids ID 列表
+     */
+    void deleteByIds(List<Long> ids);
+
+    /**
+     * 根据用户 ID 删除
+     *
+     * @param userIds 用户 ID 列表
+     */
+    void deleteByUserIds(List<Long> userIds);
+
+    /**
+     * 批量插入
+     *
+     * @param list 数据集
+     */
+    void saveBatch(List<UserRoleDO> list);
+
+    /**
+     * 根据用户 ID 查询
+     *
+     * @param userId 用户 ID
+     * @return 角色 ID 列表
+     */
+    List<Long> listRoleIdByUserId(Long userId);
+
+    /**
+     * 根据角色 ID 查询
+     *
+     * @param roleId 角色 ID
+     * @return 用户 ID 列表
+     */
+    List<Long> listUserIdByRoleId(Long roleId);
+
+    /**
+     * 根据角色 ID 判断是否已被用户关联
+     *
+     * @param roleIds 角色 ID 列表
+     * @return 是否已关联（true：已关联；false：未关联）
+     */
+    boolean isRoleIdExists(List<Long> roleIds);
+}

@@ -1,0 +1,96 @@
+
+package top.continew.admin.system.model.entity.user;
+
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+import top.continew.admin.common.base.model.entity.BaseDO;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
+import top.continew.admin.common.enums.GenderEnum;
+import top.continew.starter.extension.crud.annotation.DictModel;
+import top.continew.starter.security.crypto.annotation.FieldEncrypt;
+import top.continew.starter.security.crypto.enums.Algorithm;
+
+import java.io.Serial;
+import java.time.LocalDateTime;
+
+/**
+ * 用户实体
+ *
+ * @author Charles7c
+ * @since 2022/12/21 20:42
+ */
+@Data
+@DictModel(labelKey = "nickname", extraKeys = {"username"})
+@TableName("sys_user")
+public class UserDO extends BaseDO {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 用户名
+     */
+    private String username;
+
+    /**
+     * 昵称
+     */
+    private String nickname;
+
+    /**
+     * 密码
+     */
+    @FieldEncrypt(Algorithm.PASSWORD_ENCODER)
+    private String password;
+
+    /**
+     * 性别
+     */
+    private GenderEnum gender;
+
+    /**
+     * 邮箱
+     */
+    @FieldEncrypt
+    @TableField(insertStrategy = FieldStrategy.NOT_EMPTY)
+    private String email;
+
+    /**
+     * 手机号码
+     */
+    @FieldEncrypt
+    @TableField(insertStrategy = FieldStrategy.NOT_EMPTY)
+    private String phone;
+
+    /**
+     * 头像地址
+     */
+    private String avatar;
+
+    /**
+     * 描述
+     */
+    private String description;
+
+    /**
+     * 状态
+     */
+    private DisEnableStatusEnum status;
+
+    /**
+     * 是否为系统内置数据
+     */
+    private Boolean isSystem;
+
+    /**
+     * 最后一次修改密码时间
+     */
+    private LocalDateTime pwdResetTime;
+
+    /**
+     * 部门 ID
+     */
+    private Long deptId;
+}

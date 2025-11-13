@@ -1,0 +1,65 @@
+
+package top.continew.admin.system.service.impl;
+
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import top.continew.admin.system.mapper.user.UserPasswordHistoryMapper;
+import top.continew.admin.system.model.entity.user.UserPasswordHistoryDO;
+import top.continew.admin.system.service.UserPasswordHistoryService;
+import top.continew.starter.core.util.CollUtils;
+
+import java.util.List;
+
+/**
+ * 用户历史密码业务实现
+ *
+ * @author Charles7c
+ * @since 2024/5/16 21:58
+ */
+@Service
+@RequiredArgsConstructor
+public class UserPasswordHistoryServiceImpl implements UserPasswordHistoryService {
+
+    private final UserPasswordHistoryMapper baseMapper;
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void add(Long userId, String password, int count) {
+        if (StrUtil.isBlank(password)) {
+            return;
+        }
+        baseMapper.insert(new UserPasswordHistoryDO(userId, password));
+        // 删除过期历史密码
+        baseMapper.deleteExpired(userId, count);
+    }
+
+    @Override
+    public void deleteByUserIds(List<Long> userIds) {
+        if (CollUtil.isEmpty(userIds)) {
+            return;
+        }
+        baseMapper.lambdaUpdate().in(UserPasswordHistoryDO::getUserId, userIds).remove();
+    }
+
+    @Override
+    public boolean isPasswordReused(Long userId, String password, int count) {
+        // 查询近 N 个历史密码
+        List<UserPasswordHistoryDO> list = baseMapper.lambdaQuery()
+            .select(UserPasswordHistoryDO::getPassword)
+            .eq(UserPasswordHistoryDO::getUserId, userId)
+            .orderByDesc(UserPasswordHistoryDO::getCreateTime)
+            .last("LIMIT %s".formatted(count))
+            .list();
+        if (CollUtil.isEmpty(list)) {
+            return false;
+        }
+        // 校验是否重复使用历史密码
+        List<String> passwordList = CollUtils.mapToList(list, UserPasswordHistoryDO::getPassword);
+        return passwordList.stream().anyMatch(p -> passwordEncoder.matches(password, p));
+    }
+}

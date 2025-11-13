@@ -1,0 +1,59 @@
+
+package top.continew.admin.system.model.resp.dashboard;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
+
+/**
+ * 仪表盘-通用总览响应参数
+ *
+ * @author Charles7c
+ * @since 2024/10/19 12:19
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(description = "仪表盘-通用总览响应参数")
+public class DashboardOverviewCommonResp implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 总数
+     */
+    @Schema(description = "总数", example = "888888")
+    private Long total;
+
+    /**
+     * 今日数量
+     */
+    @Schema(description = "今日数量", example = "888")
+    private Long today;
+
+    /**
+     * 较昨日新增（百分比）
+     */
+    @Schema(description = "较昨日新增（百分比）", example = "23.4")
+    private BigDecimal growth;
+
+    /**
+     * 图表数据
+     */
+    @Schema(description = "图表数据")
+    private List<DashboardChartCommonResp> dataList;
+
+    /**
+     * 昨日数量
+     */
+    @JsonIgnore
+    private Long yesterday;
+}

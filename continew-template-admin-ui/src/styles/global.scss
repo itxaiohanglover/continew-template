@@ -1,0 +1,602 @@
+/* 全局样式 */
+@import './var.scss';
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+// 一般结合<a-row class="flex-column"></a-row>使用
+.flex-column {
+  flex-direction: column;
+  overflow: hidden;
+}
+
+// 通用外边距
+.gi_margin {
+  margin: $margin;
+}
+
+// 通用内边距
+.gi_padding {
+  padding: $padding;
+}
+
+.gi_relative {
+  position: relative;
+}
+
+.gi_absolute {
+  position: absolute;
+}
+
+.gi_rotate_90deg {
+  transform: rotate(90deg);
+}
+
+.gi_rotate_-90deg {
+  transform: rotate(-90deg);
+}
+
+.gi_rotate_180deg {
+  transform: rotate(180deg);
+}
+
+.gi_rotate_-180deg {
+  transform: rotate(-180deg);
+}
+
+.gi_select_input {
+  width: 120px !important;
+}
+
+.gi_search_input {
+  width: 250px !important;
+}
+
+.gi_line_1 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.gi_line_2 {
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+}
+
+.gi_line_3 {
+  line-clamp: 2;
+  -webkit-line-clamp: 3;
+}
+
+.gi_line_4 {
+  line-clamp: 2;
+  -webkit-line-clamp: 4;
+}
+
+.gi_line_5 {
+  line-clamp: 2;
+  -webkit-line-clamp: 5;
+}
+
+.gi_line_2,
+.gi_line_3,
+.gi_line_4,
+.gi_line_5 {
+  overflow: hidden;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: -webkit-box; // 弹性伸缩盒
+  -webkit-box-orient: vertical; // 设置伸缩盒子元素排列方式
+}
+
+.gi_mt {
+  margin-top: $margin;
+}
+
+.gi_mb {
+  margin-bottom: $margin;
+}
+
+.gi_ml {
+  margin-left: $margin;
+}
+
+.gi_mr {
+  margin-right: $margin;
+}
+
+.gi_mx {
+  margin: 0 $margin;
+}
+
+.gi_my {
+  margin: $margin 0;
+}
+
+.gi_m0 {
+  margin: 0;
+}
+
+.gi_pt {
+  padding-top: $margin;
+}
+
+.gi_pb {
+  padding-bottom: $margin;
+}
+
+.gi_pl {
+  padding-left: $margin;
+}
+
+.gi_pr {
+  padding-right: $margin;
+}
+
+.gi_px {
+  padding: 0 $padding;
+}
+
+.gi_py {
+  padding: $padding 0;
+}
+
+.gi_p0 {
+  padding: 0;
+}
+
+.gi_round {
+  border-radius: 100px;
+}
+
+.gi_bg_1 {
+  background-color: var(--color-bg-1);
+}
+
+.gi_bg_2 {
+  background-color: var(--color-bg-2);
+}
+
+.gi_bg_3 {
+  background-color: var(--color-bg-3);
+}
+
+.gi_bg_4 {
+  background-color: var(--color-bg-4);
+}
+
+.gi_bg_5 {
+  background-color: var(--color-bg-5);
+}
+
+// hover按钮
+.gi_hover_btn {
+  border: 0 !important;
+  background-color: transparent;
+
+  &:hover {
+    background: var(--color-secondary-hover) !important;
+    border-radius: 50%;
+  }
+
+  &:active {
+    background: var(--color-secondary-active) !important;
+    border-radius: 50%;
+  }
+}
+
+.gi_hover_btn-border {
+  &:hover {
+    background: var(--color-secondary-hover) !important;
+  }
+
+  &:active {
+    background: var(--color-secondary-active) !important;
+  }
+}
+
+// 通用盒子
+.gi_box {
+  background: var(--color-bg-1);
+  border-radius: $radius-box;
+  overflow: hidden;
+}
+
+// 卡片组件，使body的高度自动撑满
+.gi_card {
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  .arco-card-body {
+    flex: 1;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+// 页面卡片，右侧有返回按钮
+.gi_page_card {
+  flex: 1;
+  margin: var(--margin);
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  .arco-card-body {
+    flex: 1;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+}
+
+// 卡片标题，标题左侧的伪类样式
+.gi_card_title {
+  > .arco-card-header {
+    border-bottom: none;
+    .arco-card-header-title::before {
+      content: '';
+      width: 4px;
+      height: 50%;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgb(var(--primary-5));
+      border-radius: 0 4px 4px 0;
+    }
+  }
+}
+
+// 普通页面（使用场景，页面内容超出高度会自动滚动）
+.gi_page {
+  flex: 1;
+  padding: $margin;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+// 表格页面
+.gi_table_page {
+  flex: 1;
+  overflow: hidden;
+  margin: $margin;
+  background: var(--color-bg-1);
+  padding: $padding;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  .header {
+    padding: 0 0 10px;
+    .title {
+      color: var(--color-text-1);
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+  }
+
+}
+
+// 表格类名 高度自适应
+.gi_table {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  >.arco-spin {
+    max-height: 100%;
+    height: auto;
+    overflow: hidden;
+  }
+}
+
+// 确保表格右侧边框显示
+.arco-table-scroll-y {
+  border-right: 1px solid var(--color-border-table);
+}
+
+// 表格类名，高度自适应，分页始终固定在最底部
+.gi_full_table {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  .arco-table-container {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .arco-table-scroll-y {
+    border-right: 1px solid var(--color-border-table);
+  }
+
+  .arco-table-tr .arco-table-td:last-child,
+  .arco-table-tr .arco-table-th:last-child {
+    border-right: none;
+  }
+
+  .arco-table-content {
+    .arco-scrollbar:last-child {
+      .arco-table-element {
+        border-bottom: 1px solid var(--color-border-table);
+      }
+    }
+  }
+}
+
+.gi_full_tabs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  .arco-tabs-content {
+    flex: 1;
+    padding-top: 0;
+
+    .arco-tabs-content-list {
+      height: 100%;
+    }
+
+    .arco-tabs-pane {
+      height: 100%;
+      overflow-y: auto;
+    }
+  }
+}
+
+// 编辑表格，表头的必填红色星号
+.gi_column_require {
+  .arco-table-th-title {
+    &::before {
+      content: '*';
+      color: red;
+      padding-right: 2px;
+    }
+  }
+}
+
+.gi_full_column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.gi_tabs {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+
+  .arco-tabs-content {
+    flex: 1;
+    overflow: hidden;
+
+    .arco-tabs-content-list {
+      height: 100%;
+    }
+
+    .arco-tabs-content-item {
+      height: 100%;
+    }
+
+    .arco-tabs-pane {
+      height: 100%;
+      overflow: hidden;
+    }
+  }
+}
+
+.detail{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  &_header{
+    background: var(--color-bg-1);
+  }
+  &_content{
+    position: relative;
+    flex: 1;
+    // height: 100%;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    padding: $padding;
+    margin: $margin;
+    background: var(--color-bg-1);
+  }
+}
+
+// echarts 提示
+.echarts-tooltip-diy {
+  background: linear-gradient(
+                  304.17deg,
+                  rgba(253, 254, 255, 0.6) -6.04%,
+                  rgba(244, 247, 252, 0.6) 85.2%
+  ) !important;
+  border: none !important;
+  backdrop-filter: blur(10px) !important;
+  /* Note: backdrop-filter has minimal browser support */
+
+  border-radius: 6px !important;
+  .content-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 9px;
+    background: rgba(255, 255, 255, 0.8);
+    width: 164px;
+    height: 32px;
+    line-height: 32px;
+    box-shadow: 6px 0 20px rgba(34, 87, 188, 0.1);
+    border-radius: 4px;
+    margin-bottom: 4px;
+  }
+  .tooltip-title {
+    margin: 0 0 10px 0;
+  }
+  p {
+    margin: 0;
+  }
+  .tooltip-title,
+  .tooltip-value {
+    font-size: 13px;
+    line-height: 15px;
+    display: flex;
+    align-items: center;
+    text-align: right;
+    color: #1d2129;
+    font-weight: bold;
+  }
+  .tooltip-item-icon {
+    display: inline-block;
+    margin-right: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+}
+
+// 通用卡片
+.general-card {
+  border: none;
+  & > .arco-card-header {
+    height: auto;
+    padding: $padding;
+    border: none;
+  }
+  & > .arco-card-body {
+    padding: 0 $padding $padding $padding;
+  }
+}
+
+// 渐变卡片
+.gradient-card {
+  border-radius: 8px;
+  border: 1px solid var(--color-neutral-3);
+  & > .arco-card-header {
+    border: none;
+    background: linear-gradient(180deg, rgba(232, 244, 255, 0.5), hsla(0, 0%, 100%, 0));
+  }
+  .item {
+    align-items: center;
+    display: flex;
+    margin-bottom: 20px;
+    .icon-wrapper {
+      align-items: center;
+      background: var(--color-neutral-2);
+      border-radius: 50%;
+      display: flex;
+      height: 48px;
+      justify-content: center;
+      width: 48px;
+    }
+    .info {
+      flex: 1 1;
+      margin: 0 16px;
+      &-top {
+        margin-bottom: 4px;
+        .label {
+          font-weight: 500;
+          line-height: 22px;
+          margin-right: 12px;
+        }
+        .bind {
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 20px;
+        }
+      }
+      &-desc {
+        color: #86909c;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 20px;
+        .value {
+          color: #4e5969;
+        }
+      }
+    }
+    .btn-wrapper {
+      align-self: flex-start;
+      .btn {
+        height: 28px;
+        width: 56px;
+        &:hover {
+          -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, .15);
+          box-shadow: 0 2px 3px rgba(0, 0, 0, .15);
+          border-color: rgb(var(--primary-5));
+        }
+      }
+    }
+  }
+
+  .detail {
+    display: flex;
+    font-size: 12px;
+    justify-content: flex-start;
+    margin: -5px 0 0 64px;
+    .sub-text-wrapper {
+      width: 100%;
+      border-left: 2px solid var(--color-fill-4);
+      padding-left: 12px;
+      .sub-text {
+        color: #4e5969;
+        font-weight: 400;
+        line-height: 20px;
+        margin-bottom: 8px;
+        &-value {
+          background: var(--color-neutral-2);
+          padding: 1px 5px;
+          margin: 0 5px;
+          border-radius: 3px;
+        }
+      }
+      .arco-link.link {
+        font-size: 12px;
+        padding: 0;
+      }
+    }
+  }
+}
+
+// 通用描述
+.general-description {
+  position: relative;
+  .arco-descriptions-title {
+    padding-left: 10px;
+  }
+  .arco-descriptions-title::before {
+    content: '';
+    width: 4px;
+    height: 22px;
+    position: absolute;
+    left: 0;
+    background-color: rgb(var(--primary-5));
+    border-radius: 0 4px 4px 0;
+  }
+}

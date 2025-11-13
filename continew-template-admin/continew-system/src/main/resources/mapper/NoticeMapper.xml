@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.continew.admin.system.mapper.NoticeMapper">
+
+    <resultMap id="notice" type="top.continew.admin.system.model.resp.notice.NoticeResp">
+        <id property="id" column="id" />
+        <result property="noticeMethods" column="notice_methods" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler" />
+    </resultMap>
+
+    <select id="selectNoticePage" resultMap="notice">
+        SELECT
+            t1.id,
+            t1.title,
+            t1.type,
+            t1.notice_scope,
+            t1.notice_methods,
+            t1.is_timing,
+            t1.publish_time,
+            t1.is_top,
+            t1.status,
+            t1.create_user
+        <if test="query.userId != null">
+            ,t2.read_time IS NOT NULL AS isRead
+        </if>
+        FROM sys_notice AS t1
+        <if test="query.userId != null">
+            LEFT JOIN sys_notice_log AS t2 ON t2.notice_id = t1.id AND t2.user_id = #{query.userId}
+        </if>
+        <where>
+            <if test="query.userId != null">
+                <choose>
+                    <when test="_databaseId == 'mysql'">
+                        (t1.notice_scope = 1 OR (t1.notice_scope = 2 AND JSON_CONTAINS(t1.notice_users, CONCAT('"', #{query.userId}, '"'))))
+                    </when>
+                    <when test="_databaseId == 'pgsql'">
+                        (t1.notice_scope = 1 OR (t1.notice_scope = 2 AND t1.notice_users::jsonb @> jsonb_build_array(#{query.userId}::text)))
+                    </when>
+                </choose>
+            </if>
+            <if test="query.title != null and query.title != ''">
+                AND t1.title LIKE CONCAT('%', #{query.title}, '%')
+            </if>
+            <if test="query.type != null and query.type != ''">
+                AND t1.type = #{query.type}
+            </if>
+        </where>
+        <if test="query.userId != null">
+            ORDER BY t1.is_top DESC, t1.publish_time DESC
+        </if>
+        <if test="query.userId == null">
+            ORDER BY t1.create_time DESC
+        </if>
+    </select>
+
+    <select id="selectUnreadIdsByUserId" resultType="java.lang.Long">
+        SELECT
+            t1.id
+        FROM sys_notice AS t1
+        LEFT JOIN sys_notice_log AS t2 ON t2.notice_id = t1.id AND t2.user_id = #{userId}
+        WHERE
+        <choose>
+            <when test="_databaseId == 'mysql'">
+                (t1.notice_scope = 1 OR (t1.notice_scope = 2 AND JSON_CONTAINS(t1.notice_users, CONCAT('"', #{userId}, '"'))))
+            </when>
+            <when test="_databaseId == 'pgsql'">
+                (t1.notice_scope = 1 OR (t1.notice_scope = 2 AND t1.notice_users::jsonb @> jsonb_build_array(#{userId}::text)))
+            </when>
+        </choose>
+        <if test="noticeMethod != null">
+            <choose>
+                <when test="_databaseId == 'mysql'">
+                    AND JSON_CONTAINS(t1.notice_methods, CAST(#{noticeMethod} AS CHAR))
+                </when>
+                <when test="_databaseId == 'pgsql'">
+                    AND (t1.notice_methods::jsonb @> jsonb_build_array(#{noticeMethod}::text))
+                </when>
+            </choose>
+        </if>
+        AND t2.read_time IS NULL
+    </select>
+
+    <select id="selectDashboardList"
+            resultType="top.continew.admin.system.model.resp.dashboard.DashboardNoticeResp">
+        SELECT
+        id, title, type, is_top
+        FROM sys_notice
+        WHERE status = 3
+        <if test="userId != null">
+            <choose>
+                <when test="_databaseId == 'mysql'">
+                    AND (notice_scope = 1 OR (notice_scope = 2 AND JSON_CONTAINS(notice_users, CONCAT('"', #{userId}, '"'))))
+                </when>
+                <when test="_databaseId == 'pgsql'">
+                    AND (notice_scope = 1 OR (notice_scope = 2 AND notice_users::jsonb @> jsonb_build_array(#{userId}::text)))
+                </when>
+            </choose>
+        </if>
+        ORDER BY is_top DESC, publish_time DESC
+        LIMIT 5
+    </select>
+</mapper>

@@ -1,0 +1,71 @@
+
+package top.continew.admin.system.model.resp;
+
+import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
+import cn.idev.excel.annotation.ExcelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import top.continew.admin.common.base.model.resp.BaseDetailResp;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
+import top.continew.starter.extension.crud.annotation.TreeField;
+import top.continew.starter.excel.converter.ExcelBaseEnumConverter;
+
+import java.io.Serial;
+
+/**
+ * 部门响应参数
+ *
+ * @author Charles7c
+ * @since 2023/1/22 13:53
+ */
+@Data
+@ExcelIgnoreUnannotated
+@TreeField(value = "id", nameKey = "name")
+@Schema(description = "部门响应参数")
+public class DeptResp extends BaseDetailResp {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 名称
+     */
+    @Schema(description = "名称", example = "测试部")
+    @ExcelProperty(value = "名称", order = 2)
+    private String name;
+
+    /**
+     * 上级部门 ID
+     */
+    @Schema(description = "上级部门 ID", example = "2")
+    @ExcelProperty(value = "上级部门 ID", order = 3)
+    private Long parentId;
+
+    /**
+     * 状态
+     */
+    @Schema(description = "状态", example = "1")
+    @ExcelProperty(value = "状态", converter = ExcelBaseEnumConverter.class, order = 5)
+    private DisEnableStatusEnum status;
+
+    /**
+     * 排序
+     */
+    @Schema(description = "排序", example = "1")
+    @ExcelProperty(value = "排序", order = 6)
+    private Integer sort;
+
+    /**
+     * 是否为系统内置数据
+     */
+    @Schema(description = "是否为系统内置数据", example = "false")
+    @ExcelProperty(value = "系统内置", order = 7)
+    private Boolean isSystem;
+
+    /**
+     * 描述
+     */
+    @Schema(description = "描述", example = "测试部描述信息")
+    @ExcelProperty(value = "描述", order = 8)
+    private String description;
+}

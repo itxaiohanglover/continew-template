@@ -1,0 +1,46 @@
+
+package top.continew.admin.system.model.resp;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import top.continew.admin.common.base.model.resp.BaseDetailResp;
+
+import java.io.Serial;
+
+/**
+ * 字典响应参数
+ *
+ * @author Charles7c
+ * @since 2023/9/11 21:29
+ */
+@Data
+@Schema(description = "字典响应参数")
+public class DictResp extends BaseDetailResp {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 名称
+     */
+    @Schema(description = "名称", example = "公告类型")
+    private String name;
+
+    /**
+     * 编码
+     */
+    @Schema(description = "编码", example = "notice_type")
+    private String code;
+
+    /**
+     * 描述
+     */
+    @Schema(description = "描述", example = "公告类型描述信息")
+    private String description;
+
+    /**
+     * 是否为系统内置数据
+     */
+    @Schema(description = "是否为系统内置数据", example = "true")
+    private Boolean isSystem;
+}

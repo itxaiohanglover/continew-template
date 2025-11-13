@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.continew.admin.system.mapper.LogMapper">
+    <select id="selectLogPage" resultType="top.continew.admin.system.model.resp.log.LogResp">
+        SELECT
+            t1.id,
+            t1.description,
+            t1.module,
+            t1.time_taken,
+            t1.ip,
+            t1.address,
+            t1.browser,
+            t1.os,
+            t1.status,
+            t1.error_msg,
+            t1.create_user,
+            t1.create_time,
+            t2.nickname AS createUserString
+        FROM sys_log AS t1
+        LEFT JOIN sys_user AS t2 ON t2.id = t1.create_user
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectLogList" resultType="top.continew.admin.system.model.resp.log.LogResp">
+        SELECT
+            t1.id,
+            t1.description,
+            t1.module,
+            t1.time_taken,
+            t1.ip,
+            t1.address,
+            t1.browser,
+            t1.os,
+            t1.status,
+            t1.error_msg,
+            t1.create_user,
+            t1.create_time,
+            t2.nickname AS createUserString
+        FROM sys_log AS t1
+        LEFT JOIN sys_user AS t2 ON t2.id = t1.create_user
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectDashboardOverviewPv" databaseId="mysql" resultType="top.continew.admin.system.model.resp.dashboard.DashboardOverviewCommonResp">
+        SELECT
+            (SELECT COUNT(*) FROM sys_log) AS total,
+            (SELECT COUNT(*) FROM sys_log WHERE create_time >= CURDATE() AND create_time <![CDATA[ < ]]> DATE_ADD(CURDATE(), INTERVAL 1 DAY)) AS today,
+            (SELECT COUNT(*) FROM sys_log WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND create_time <![CDATA[ < ]]> CURDATE()) AS yesterday
+
+    </select>
+    <select id="selectDashboardOverviewPv" databaseId="pgsql" resultType="top.continew.admin.system.model.resp.dashboard.DashboardOverviewCommonResp">
+        SELECT
+            (SELECT COUNT(*) FROM sys_log) AS total,
+            (SELECT COUNT(*) FROM sys_log WHERE create_time >= CURRENT_DATE AND create_time <![CDATA[ < ]]> CURRENT_DATE + INTERVAL '1 day') AS today,
+            (SELECT COUNT(*) FROM sys_log WHERE create_time >= CURRENT_DATE - INTERVAL '1 day' AND create_time <![CDATA[ < ]]> CURRENT_DATE) AS yesterday
+    </select>
+
+    <select id="selectDashboardOverviewIp" databaseId="mysql" resultType="top.continew.admin.system.model.resp.dashboard.DashboardOverviewCommonResp">
+        SELECT
+            (SELECT COUNT(DISTINCT ip) FROM sys_log) AS total,
+            (SELECT COUNT(DISTINCT ip) FROM sys_log WHERE create_time >= CURDATE() AND create_time &lt; DATE_ADD(CURDATE(), INTERVAL 1 DAY)) AS today,
+            (SELECT COUNT(DISTINCT ip) FROM sys_log WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND create_time &lt; CURDATE()) AS yesterday
+    </select>
+    <select id="selectDashboardOverviewIp" databaseId="pgsql" resultType="top.continew.admin.system.model.resp.dashboard.DashboardOverviewCommonResp">
+        SELECT
+                (SELECT COUNT(DISTINCT ip) FROM sys_log) AS total,
+                (SELECT COUNT(DISTINCT ip) FROM sys_log WHERE create_time >= CURRENT_DATE AND create_time <![CDATA[ < ]]> CURRENT_DATE + INTERVAL '1 day') AS today,
+                (SELECT COUNT(DISTINCT ip) FROM sys_log WHERE create_time >= CURRENT_DATE - INTERVAL '1 day' AND create_time <![CDATA[ < ]]> CURRENT_DATE) AS yesterday
+    </select>
+
+    <select id="selectListDashboardAnalysisPv" databaseId="mysql"
+            resultType="top.continew.admin.system.model.resp.dashboard.DashboardChartCommonResp">
+        SELECT
+            DATE_FORMAT(create_time, '%Y-%m') AS name,
+            COUNT(*) AS value
+        FROM sys_log
+        WHERE DATE_FORMAT(create_time, '%Y-%m' ) IN
+        <foreach collection="months" item="month" separator="," open="(" close=")">
+            #{month}
+        </foreach>
+        GROUP BY name
+        ORDER BY name
+    </select>
+    <select id="selectListDashboardAnalysisPv" databaseId="pgsql"
+            resultType="top.continew.admin.system.model.resp.dashboard.DashboardChartCommonResp">
+        SELECT
+        TO_CHAR(create_time, 'YYYY-MM') AS name,
+        COUNT(*) AS value
+        FROM sys_log
+        WHERE TO_CHAR(create_time, 'YYYY-MM') IN
+        <foreach collection="months" item="month" separator="," open="(" close=")">
+            #{month}
+        </foreach>
+        GROUP BY name
+        ORDER BY name
+    </select>
+
+    <select id="selectListDashboardAnalysisIp" databaseId="mysql"
+            resultType="top.continew.admin.system.model.resp.dashboard.DashboardChartCommonResp">
+        SELECT
+            DATE_FORMAT(create_time, '%Y-%m') AS name,
+            COUNT(DISTINCT ip) AS value
+        FROM sys_log
+        WHERE DATE_FORMAT(create_time, '%Y-%m' ) IN
+        <foreach collection="months" item="month" separator="," open="(" close=")">
+            #{month}
+        </foreach>
+        GROUP BY name
+        ORDER BY name
+    </select>
+    <select id="selectListDashboardAnalysisIp" databaseId="pgsql"
+            resultType="top.continew.admin.system.model.resp.dashboard.DashboardChartCommonResp">
+        SELECT
+        TO_CHAR(create_time, 'YYYY-MM') AS name,
+        COUNT(DISTINCT ip) AS value
+        FROM sys_log
+        WHERE TO_CHAR(create_time, 'YYYY-MM') IN
+        <foreach collection="months" item="month" separator="," open="(" close=")">
+            #{month}
+        </foreach>
+        GROUP BY name
+        ORDER BY name
+    </select>
+
+    <select id="selectListDashboardAnalysisGeo" resultType="top.continew.admin.system.model.resp.dashboard.DashboardChartCommonResp">
+        SELECT
+            CASE
+                WHEN POSITION(' ' IN address) > 0 THEN SUBSTRING(address FROM 1 FOR POSITION(' ' IN address) - 1)
+                ELSE address
+                END AS name,
+            COUNT(*) AS value
+        FROM sys_log
+        WHERE address LIKE '中国%'
+        GROUP BY name
+    </select>
+
+    <select id="selectListDashboardAccessTrend"
+            resultType="top.continew.admin.system.model.resp.dashboard.DashboardAccessTrendResp">
+        SELECT
+            DATE(create_time) AS date,
+            COUNT(*) AS pvCount,
+            COUNT(DISTINCT ip) AS ipCount
+        FROM sys_log
+        WHERE create_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY date
+        ORDER BY date
+    </select>
+
+    <select id="selectListDashboardAnalysisTimeslot"
+            resultType="top.continew.admin.system.model.resp.dashboard.DashboardChartCommonResp">
+        SELECT
+            <choose>
+                <when test="_databaseId =='mysql'">
+                    LPAD(CONCAT(FLOOR(HOUR(create_time) / 2) * 2, ':00'), 5, '0') AS name,
+                </when>
+                <when test="_databaseId =='pgsql'">
+                    LPAD((FLOOR(EXTRACT(HOUR FROM create_time) / 2) * 2)::text || ':00', 5, '0') AS name,
+                </when>
+            </choose>
+            COUNT(*) AS value
+        FROM sys_log
+        GROUP BY name
+        ORDER BY name
+    </select>
+
+    <select id="selectListDashboardAnalysisModule"
+            resultType="top.continew.admin.system.model.resp.dashboard.DashboardChartCommonResp">
+        SELECT
+            module AS name,
+            COUNT(*) AS value
+        FROM sys_log
+        WHERE module != '验证码' AND module != '登录'
+        GROUP BY name
+        ORDER BY value DESC
+        LIMIT #{top}
+    </select>
+
+    <select id="selectListDashboardAnalysisOs"
+            resultType="top.continew.admin.system.model.resp.dashboard.DashboardChartCommonResp">
+        SELECT
+            os AS name,
+            COUNT(*) AS value
+        FROM sys_log
+        WHERE os IS NOT NULL
+        GROUP BY name
+        ORDER BY value DESC
+        LIMIT #{top}
+    </select>
+
+    <select id="selectListDashboardAnalysisBrowser"
+            resultType="top.continew.admin.system.model.resp.dashboard.DashboardChartCommonResp">
+        SELECT
+            <choose>
+                <when test="_databaseId =='mysql'">
+                    SUBSTRING_INDEX(browser, ' ', 1) AS name,
+                </when>
+                <when test="_databaseId =='pgsql'">
+                    SPLIT_PART(browser, ' ', 1) AS name,
+                </when>
+            </choose>
+            COUNT(*) AS value
+        FROM sys_log
+        WHERE browser IS NOT NULL
+        GROUP BY name
+        ORDER BY value DESC
+        LIMIT #{top}
+    </select>
+</mapper>
